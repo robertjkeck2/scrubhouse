@@ -2,23 +2,20 @@
 <html lang="en">
 
 <head>
-    <script src="/static/js/vendor/jquery.min.220afd743d9e.js"></script>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="android-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="static/android-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
 
     <title>
         Scrubhouse: Drop-in audio chat for scrubs
     </title>
 
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,900&amp;display=swap" rel="stylesheet">
     <style>
         html {
             line-height: 1.15;
@@ -1278,56 +1275,21 @@
     <meta property="og:url" content="https://www.joinscrubhouse.com/">
     <meta property="og:description"
         content="Scrubhouse is a new type of social network based on voice—where unpopular people around the world come together to talk, listen and learn from each other in real-time.">
-    <meta property="og:image" content="https://www.joinscrubhouse.com/static/img/full_tn.2c52415a6353.png">
+    <meta property="og:image" content="https://www.joinscrubhouse.com/static/full.png">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Scrubhouse: Drop-in audio chat for scrubs">
     <meta name="twitter:description"
         content="Scrubhouse is a new type of social network based on voice—where unpopular people around the world come together to talk, listen and learn from each other in real-time.">
     <meta property="twitter:url" content="https://www.joinscrubhouse.com/">
-    <meta name="twitter:image" content="https://www.joinscrubhouse.com/static/img/summary_tn.97509b5c6693.png">
-
-    <script type="text/javascript">
-        var banner_error_timeout;
-        var banner_success_timeout;
-        var banner_speed = 'fast';
-        var banner_timeout = 5 * 1000;
-
-        function show_error(msg) {
-            if (banner_error_timeout) {
-                clearTimeout(banner_error_timeout);
-            }
-            $('#banner_error').text(msg);
-            $('#banner_error').slideDown(banner_speed);
-            banner_error_timeout = setTimeout(function () {
-                $('#banner_error').slideUp(banner_speed);
-            }, banner_timeout);
-        }
-
-        function show_success(msg) {
-            if (banner_success_timeout) {
-                clearTimeout(banner_success_timeout);
-            }
-            $('#banner_success').text(msg);
-            $('#banner_success').slideDown(banner_speed);
-            banner_success_timeout = setTimeout(function () {
-                $('#banner_success').slideUp(banner_speed);
-            }, banner_timeout);
-        }
-
-    </script>
-
+    <meta name="twitter:image" content="https://www.joinscrubhouse.com/static/summary.png">
 </head>
 
 <body class="font-body bg-white">
-    <div id="banner_error" class="hidden p-3 text-center text-white bg-red-500" style="display:none"></div>
-    <div id="banner_success" class="hidden p-3 text-center text-white bg-green-500" style="display:none"></div>
-
-
     <div class="flex flex-col items-center justify-center text-center mx-auto px-5 h-screen">
         <div class="flex flex-col items-center justify-center text-center pb-20 text-gray-800 text-xl text-center">
             <div class="flex items-center justify-center text-center font-bold">
-                <img class="wave object-contain h-10 w-10 pr-1" alt="wave" src="scrub.png">
+                <img class="wave object-contain h-10 w-10 pr-1" alt="wave" src="static/scrub.png">
                 Scrubhouse
             </div>
             <div class="mt-8 text-gray-700 max-w-md">
@@ -1339,7 +1301,7 @@
             </div>
 
             <div class="mt-8 mb-8 max-w-sm">
-                <a href="/app"><img src="sign-in-with-twitter-gray.png.img.fullhd.medium.png"></a>
+                <a href="/app"><img src="static/sign-in-with-twitter-gray.png.img.fullhd.medium.png"></a>
             </div>
         </div>
         <div
@@ -1350,28 +1312,28 @@
                     <div class="px-1">・</div>
                 </div>
                 <div class="flex">
-                    <a href="/joinourteam">Jobs</a>
+                    <a href="https://en.wikipedia.org/wiki/Steve_Jobs">Jobs</a>
                     <div class="px-1">・</div>
                 </div>
                 <div class="flex">
-                    <a href="/blog">Blog</a>
+                    <a href="https://twitter.com/joinscrubhouse">Blog</a>
                     <div class="px-1">・</div>
                 </div>
                 <div class="flex">
-                    <a href="/contact">Contact</a>
+                    <a href="mailto:joinscrubhouse@gmail.com">Contact</a>
                     <div class="px-1">・</div>
                 </div>
                 <div class="flex">
-                    <a href="https://community.joinclubhouse.com">Guidelines</a>
+                    <a href="https://www.urbandictionary.com/define.php?term=Rules%20of%20Fight%20Club">Guidelines</a>
                 </div>
             </div>
             <div class="flex items-center justify-center w-full">
                 <div class="flex">
-                    <a href="https://privacy.joinclubhouse.com">Privacy</a>
+                    <a href="https://brave.com">Privacy</a>
                     <div class="px-1">・</div>
                 </div>
                 <div class="flex">
-                    <a href="https://tos.joinclubhouse.com">Terms</a>
+                    <a href="https://a16z.com">Terms</a>
                 </div>
             </div>
         </div>
