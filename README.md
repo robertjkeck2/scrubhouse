@@ -6,6 +6,5 @@
 	</p>
 	<br>
 	<br>
+	https://joinscrubhouse.com
 </div>
-
-https://joinscrubhouse.com
