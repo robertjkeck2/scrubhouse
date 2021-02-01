@@ -6,7 +6,9 @@ import urllib.parse
 import urllib.error
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
+from nacl.signing import VerifyKey
+from nacl.exceptions import BadSignatureError
 import oauth2 as oauth
 import requests
 
@@ -28,6 +30,7 @@ app.config["TWITTER_API_KEY"] = os.getenv("TWITTER_API_KEY")
 app.config["TWITTER_API_SECRET"] = os.getenv("TWITTER_API_SECRET")
 app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
 app.config["DISCORD_GENERAL_CHANNEL"] = os.getenv("DISCORD_GENERAL_CHANNEL")
+app.config["DISCORD_PUBLIC_KEY"] = os.getenv("DISCORD_PUBLIC_KEY")
 
 oauth_store = {}
 
@@ -110,6 +113,17 @@ def twitter():
 
 @app.route("/room-request", methods=["POST"])
 def room():
+    verify_key = VerifyKey(bytes.fromhex(app.config["DISCORD_PUBLIC_KEY"]))
+
+    signature = request.headers["X-Signature-Ed25519"]
+    timestamp = request.headers["X-Signature-Timestamp"]
+    body = request.data
+
+    try:
+        verify_key.verify(f"{timestamp}{body}".encode(), bytes.fromhex(signature))
+    except BadSignatureError:
+        abort(401, "invalid request signature")
+
     if request.json["type"] == 1:
         return jsonify({"type": 1})
     else:
