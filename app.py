@@ -30,6 +30,7 @@ app.config["TWITTER_API_KEY"] = os.getenv("TWITTER_API_KEY")
 app.config["TWITTER_API_SECRET"] = os.getenv("TWITTER_API_SECRET")
 app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
 app.config["DISCORD_GENERAL_CHANNEL"] = os.getenv("DISCORD_GENERAL_CHANNEL")
+app.config["DISCORD_GUILD_ID"] = os.getenv("DISCORD_GUILD_ID")
 app.config["DISCORD_PUBLIC_KEY"] = os.getenv("DISCORD_PUBLIC_KEY")
 
 oauth_store = {}
@@ -127,12 +128,27 @@ def room():
     if request.json["type"] == 1:
         return jsonify({"type": 1})
     else:
+        name = request.json.get("data", {}).get("options", {}).get("value")
+        if name:
+            added = add_voice_channel(name)
+            if added:
+                return jsonify(
+                    {
+                        "type": 4,
+                        "data": {
+                            "tts": False,
+                            "content": "Your new voice channel has been added!",
+                            "embeds": [],
+                            "allowed_mentions": [],
+                        },
+                    }
+                )
         return jsonify(
             {
                 "type": 4,
                 "data": {
                     "tts": False,
-                    "content": "Your new voice channel has been added!",
+                    "content": "There was an issue adding a room. Please try again.",
                     "embeds": [],
                     "allowed_mentions": [],
                 },
@@ -143,6 +159,21 @@ def room():
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template("error.html"), 500
+
+
+def add_voice_channel(name):
+    headers = {
+        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
+        "Content-Type": "application/json",
+    }
+    create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
+        app.config["DISCORD_GUILD_ID"]
+    )
+    payload = {"name": name, "type": 2}
+    response = requests.post(create_channel_url, headers=headers, json=payload)
+    if response.status_code == 200:
+        return True
+    return False
 
 
 def get_discord_invite():
