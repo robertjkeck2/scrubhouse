@@ -8,6 +8,7 @@ import urllib.error
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, url_for
 import oauth2 as oauth
+import requests
 
 dotenv_path = join(dirname(__file__), ".env")
 load_dotenv(dotenv_path)
@@ -16,13 +17,17 @@ app = Flask(__name__)
 
 app.debug = False
 
+discord_base_url = "https://discord.com/api"
+discord_invite_base_url = "https://discord.gg/"
 request_token_url = "https://api.twitter.com/oauth/request_token"
 access_token_url = "https://api.twitter.com/oauth/access_token"
 authorize_url = "https://api.twitter.com/oauth/authorize"
 show_user_url = "https://api.twitter.com/1.1/users/show.json"
 
-app.config["APP_CONSUMER_KEY"] = os.getenv("TWITTER_API_KEY")
-app.config["APP_CONSUMER_SECRET"] = os.getenv("TWITTER_API_SECRET")
+app.config["TWITTER_API_KEY"] = os.getenv("TWITTER_API_KEY")
+app.config["TWITTER_API_SECRET"] = os.getenv("TWITTER_API_SECRET")
+app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
+app.config["DISCORD_GENERAL_CHANNEL"] = os.getenv("DISCORD_GENERAL_CHANNEL")
 
 oauth_store = {}
 
@@ -31,7 +36,7 @@ oauth_store = {}
 def start():
     app_callback_url = url_for("twitter", _external=True)
     consumer = oauth.Consumer(
-        app.config["APP_CONSUMER_KEY"], app.config["APP_CONSUMER_SECRET"]
+        app.config["TWITTER_API_KEY"], app.config["TWITTER_API_SECRET"]
     )
     client = oauth.Client(consumer)
     resp, content = client.request(
@@ -77,7 +82,7 @@ def twitter():
 
     oauth_token_secret = oauth_store[oauth_token]
     consumer = oauth.Consumer(
-        app.config["APP_CONSUMER_KEY"], app.config["APP_CONSUMER_SECRET"]
+        app.config["TWITTER_API_KEY"], app.config["TWITTER_API_SECRET"]
     )
     token = oauth.Token(oauth_token, oauth_token_secret)
     token.set_verifier(oauth_verifier)
@@ -102,7 +107,10 @@ def twitter():
 
     if followers_count < 1000:
         invite = get_discord_invite()
-        return render_template("welcome.html", invite=invite)
+        if invite:
+            return render_template("welcome.html", invite=invite)
+        else:
+            return render_template("error.html")
     else:
         return render_template("too-popular.html")
 
@@ -113,7 +121,20 @@ def internal_server_error(e):
 
 
 def get_discord_invite():
-    return "url"
+    headers = {
+        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
+        "Content-Type": "application/json",
+    }
+    channel_url = discord_base_url + "/channels/{0}/invites".format(
+        app.config["DISCORD_GENERAL_CHANNEL"]
+    )
+    payload = {"max_age": 3600, "max_uses": 1, "unique": True}
+    response = requests.post(channel_url, headers=headers, json=payload)
+    invite_url = None
+    if response.status_code == 200:
+        invite = response.json()
+        invite_url = discord_invite_base_url + invite.get("code")
+    return invite_url
 
 
 if __name__ == "__main__":
