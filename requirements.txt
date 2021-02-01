@@ -1,4 +1,5 @@
 Flask
+gunicorn
 oauth2
 python-dotenv
 requests
