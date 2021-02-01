@@ -32,6 +32,8 @@ app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
 app.config["DISCORD_GENERAL_CHANNEL"] = os.getenv("DISCORD_GENERAL_CHANNEL")
 app.config["DISCORD_GUILD_ID"] = os.getenv("DISCORD_GUILD_ID")
 app.config["DISCORD_PUBLIC_KEY"] = os.getenv("DISCORD_PUBLIC_KEY")
+app.config["DISCORD_VOICE_PARENT_ID"] = os.getenv("DISCORD_VOICE_PARENT_ID")
+
 
 oauth_store = {}
 
@@ -169,7 +171,11 @@ def add_voice_channel(name):
     create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
         app.config["DISCORD_GUILD_ID"]
     )
-    payload = {"name": name, "type": 2}
+    payload = {
+        "name": name,
+        "type": 2,
+        "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
+    }
     response = requests.post(create_channel_url, headers=headers, json=payload)
     if response.status_code == 200:
         return True
