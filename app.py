@@ -46,10 +46,7 @@ def start():
     )
 
     if resp["status"] != "200":
-        error_message = "Invalid response, status {status}, {message}".format(
-            status=resp["status"], message=content.decode("utf-8")
-        )
-        return render_template("error.html", error_message=error_message)
+        return render_template("error.html")
 
     request_token = dict(urllib.parse.parse_qsl(content))
     oauth_token = request_token[b"oauth_token"].decode("utf-8")
@@ -68,17 +65,13 @@ def twitter():
     if oauth_denied:
         if oauth_denied in oauth_store:
             del oauth_store[oauth_denied]
-        return render_template(
-            "error.html", error_message="the OAuth request was denied by this user"
-        )
+        return render_template("error.html")
 
     if not oauth_token or not oauth_verifier:
-        return render_template("error.html", error_message="callback param(s) missing")
+        return render_template("error.html")
 
     if oauth_token not in oauth_store:
-        return render_template(
-            "error.html", error_message="oauth_token not found locally"
-        )
+        return render_template("error.html")
 
     oauth_token_secret = oauth_store[oauth_token]
     consumer = oauth.Consumer(
@@ -117,7 +110,7 @@ def twitter():
 
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template("error.html", error_message="uncaught exception"), 500
+    return render_template("error.html"), 500
 
 
 def get_discord_invite():
