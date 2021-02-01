@@ -114,13 +114,15 @@ def twitter():
 
 @app.route("/room-request", methods=["POST"])
 def room():
+    verify_key = VerifyKey(bytes.fromhex(app.config["DISCORD_PUBLIC_KEY"]))
+
+    signature = request.headers["X-Signature-Ed25519"]
+    timestamp = request.headers["X-Signature-Timestamp"]
+    body = request.data
+
     try:
-        verify_key = VerifyKey(bytes.fromhex(app.config["DISCORD_PUBLIC_KEY"]))
-        signature = request.headers["X-Signature-Ed25519"]
-        timestamp = request.headers["X-Signature-Timestamp"]
-        body = request.data
         verify_key.verify(f"{timestamp}{body}".encode(), bytes.fromhex(signature))
-    except:
+    except BadSignatureError:
         abort(401, "invalid request signature")
 
     if request.json["type"] == 1:
