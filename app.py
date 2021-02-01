@@ -110,7 +110,7 @@ def twitter():
 
     if created_at:
         created_at_datetime = parser.parse(created_at)
-        last_week_datetime = datetime.now() - timedelta(days=7)
+        last_week_datetime = datetime.utcnow() - timedelta(days=7)
         if created_at_datetime > last_week_datetime:
             return render_template("too-soon.html")
         if followers_count < 1000:
