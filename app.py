@@ -177,7 +177,7 @@ def add_voice_channel(name):
         "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
     }
     response = requests.post(create_channel_url, headers=headers, json=payload)
-    if response.status_code == 200:
+    if response.status_code == 201:
         return True
     return False
 
