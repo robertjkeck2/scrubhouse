@@ -103,6 +103,7 @@ def twitter():
         return render_template("error.html")
 
     response = json.loads(real_content.decode("utf-8"))
+    print(response)
     followers_count = response.get("followers_count", 0)
     created_at = response.get("created_at")
 
