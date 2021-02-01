@@ -1,4 +1,4 @@
-from  datetime import datetime, timedelta
+from datetime import datetime, timedelta
 import json
 import os
 from os.path import join, dirname
@@ -12,6 +12,7 @@ from flask import Flask, abort, jsonify, redirect, render_template, request, url
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 import oauth2 as oauth
+import pytz
 import requests
 
 dotenv_path = join(dirname(__file__), ".env")
@@ -111,6 +112,7 @@ def twitter():
     if created_at:
         created_at_datetime = parser.parse(created_at)
         last_week_datetime = datetime.utcnow() - timedelta(days=7)
+        last_week_datetime = last_week_datetime.replace(tzinfo=pytz.utc)
         if created_at_datetime > last_week_datetime:
             return render_template("too-soon.html")
         if followers_count < 1000:
