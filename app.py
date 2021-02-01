@@ -118,7 +118,7 @@ def room():
 
     signature = request.headers["X-Signature-Ed25519"]
     timestamp = request.headers["X-Signature-Timestamp"]
-    body = request.data
+    body = request.data.decode()
 
     try:
         verify_key.verify(f"{timestamp}{body}".encode(), bytes.fromhex(signature))
