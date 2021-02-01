@@ -1,15 +1,1334 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html lang="en">
 
 <head>
-	<title>Scrubhouse: Drop-in audio chat for scrubs</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="static/android-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
+
+	<title>
+		Scrubhouse: Drop-in audio chat for scrubs
+	</title>
+
+	<style>
+		html {
+			line-height: 1.15;
+			-webkit-text-size-adjust: 100%
+		}
+
+		body {
+			margin: 0
+		}
+
+		a {
+			background-color: transparent
+		}
+
+		strong {
+			font-weight: bolder
+		}
+
+		code {
+			font-family: monospace, monospace;
+			font-size: 1em
+		}
+
+		small {
+			font-size: 80%
+		}
+
+		img {
+			border-style: none
+		}
+
+		button,
+		input,
+		textarea {
+			font-family: inherit;
+			font-size: 100%;
+			line-height: 1.15;
+			margin: 0
+		}
+
+		button,
+		input {
+			overflow: visible
+		}
+
+		button {
+			text-transform: none
+		}
+
+		[type=button],
+		[type=reset],
+		[type=submit],
+		button {
+			-webkit-appearance: button
+		}
+
+		[type=button]::-moz-focus-inner,
+		[type=reset]::-moz-focus-inner,
+		[type=submit]::-moz-focus-inner,
+		button::-moz-focus-inner {
+			border-style: none;
+			padding: 0
+		}
+
+		[type=button]:-moz-focusring,
+		[type=reset]:-moz-focusring,
+		[type=submit]:-moz-focusring,
+		button:-moz-focusring {
+			outline: 1px dotted ButtonText
+		}
+
+		textarea {
+			overflow: auto
+		}
+
+		[type=checkbox],
+		[type=radio] {
+			box-sizing: border-box;
+			padding: 0
+		}
+
+		[type=number]::-webkit-inner-spin-button,
+		[type=number]::-webkit-outer-spin-button {
+			height: auto
+		}
+
+		[type=search] {
+			-webkit-appearance: textfield;
+			outline-offset: -2px
+		}
+
+		[type=search]::-webkit-search-decoration {
+			-webkit-appearance: none
+		}
+
+		::-webkit-file-upload-button {
+			-webkit-appearance: button;
+			font: inherit
+		}
+
+		details {
+			display: block
+		}
+
+		summary {
+			display: list-item
+		}
+
+		[hidden] {
+			display: none
+		}
+
+		figure,
+		p {
+			margin: 0
+		}
+
+		button {
+			background-color: transparent;
+			background-image: none
+		}
+
+		button:focus {
+			outline: 1px dotted;
+			outline: 5px auto -webkit-focus-ring-color
+		}
+
+		ul {
+			margin: 0;
+			padding: 0
+		}
+
+		ul {
+			list-style: none
+		}
+
+		html {
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+			line-height: 1.5
+		}
+
+		*,
+		:after,
+		:before {
+			box-sizing: border-box;
+			border: 0 solid #e0e0e0
+		}
+
+		img {
+			border-style: solid
+		}
+
+		textarea {
+			resize: vertical
+		}
+
+		input::-moz-placeholder,
+		textarea::-moz-placeholder {
+			color: #a0aec0
+		}
+
+		input:-ms-input-placeholder,
+		textarea:-ms-input-placeholder {
+			color: #a0aec0
+		}
+
+		input::placeholder,
+		textarea::placeholder {
+			color: #a0aec0
+		}
+
+		[role=button],
+		button {
+			cursor: pointer
+		}
+
+		a {
+			color: inherit;
+			text-decoration: inherit
+		}
+
+		button,
+		input,
+		textarea {
+			padding: 0;
+			line-height: inherit;
+			color: inherit
+		}
+
+		code {
+			font-family: SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace
+		}
+
+		audio,
+		canvas,
+		img,
+		svg {
+			display: block;
+			vertical-align: middle
+		}
+
+		img {
+			max-width: 100%;
+			height: auto
+		}
+
+		a {
+			--text-opacity: 1;
+			color: #2f80ed;
+			color: rgba(47, 128, 237, var(--text-opacity))
+		}
+
+		.container {
+			width: 100%
+		}
+
+		@media (min-width: 640px) {
+			.container {
+				max-width: 640px
+			}
+		}
+
+		@media (min-width: 768px) {
+			.container {
+				max-width: 768px
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.container {
+				max-width: 1024px
+			}
+		}
+
+		@media (min-width: 1280px) {
+			.container {
+				max-width: 1280px
+			}
+		}
+
+		.appearance-none {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none
+		}
+
+		.bg-white {
+			--bg-opacity: 1;
+			background-color: #fff;
+			background-color: rgba(255, 255, 255, var(--bg-opacity))
+		}
+
+		.bg-gray-100 {
+			--bg-opacity: 1;
+			background-color: #fafafa;
+			background-color: rgba(250, 250, 250, var(--bg-opacity))
+		}
+
+		.bg-gray-200 {
+			--bg-opacity: 1;
+			background-color: #f2f2f2;
+			background-color: rgba(242, 242, 242, var(--bg-opacity))
+		}
+
+		.bg-gray-500 {
+			--bg-opacity: 1;
+			background-color: #bdbdbd;
+			background-color: rgba(189, 189, 189, var(--bg-opacity))
+		}
+
+		.bg-red-500 {
+			--bg-opacity: 1;
+			background-color: #e24c51;
+			background-color: rgba(226, 76, 81, var(--bg-opacity))
+		}
+
+		.bg-green-500 {
+			--bg-opacity: 1;
+			background-color: #27ae60;
+			background-color: rgba(39, 174, 96, var(--bg-opacity))
+		}
+
+		.bg-eggshell {
+			--bg-opacity: 1;
+			background-color: #f2efe4;
+			background-color: rgba(242, 239, 228, var(--bg-opacity))
+		}
+
+		.bg-chBlue {
+			--bg-opacity: 1;
+			background-color: #2f80ed;
+			background-color: rgba(47, 128, 237, var(--bg-opacity))
+		}
+
+		.hover\:bg-chBlue-dark:hover {
+			--bg-opacity: 1;
+			background-color: #3b5378;
+			background-color: rgba(59, 83, 120, var(--bg-opacity))
+		}
+
+		.focus\:bg-white:focus {
+			--bg-opacity: 1;
+			background-color: #fff;
+			background-color: rgba(255, 255, 255, var(--bg-opacity))
+		}
+
+		.bg-opacity-25 {
+			--bg-opacity: 0.25
+		}
+
+		.bg-opacity-50 {
+			--bg-opacity: 0.5
+		}
+
+		.bg-center {
+			background-position: 50%
+		}
+
+		.bg-cover {
+			background-size: cover
+		}
+
+		.border-gray-300 {
+			--border-opacity: 1;
+			border-color: #e0e0e0;
+			border-color: rgba(224, 224, 224, var(--border-opacity))
+		}
+
+		.border-gray-400 {
+			--border-opacity: 1;
+			border-color: #d5d5d5;
+			border-color: rgba(213, 213, 213, var(--border-opacity))
+		}
+
+		.focus\:border-gray-500:focus {
+			--border-opacity: 1;
+			border-color: #bdbdbd;
+			border-color: rgba(189, 189, 189, var(--border-opacity))
+		}
+
+		.border-opacity-25 {
+			--border-opacity: 0.25
+		}
+
+		.rounded {
+			border-radius: .25rem
+		}
+
+		.rounded-lg {
+			border-radius: .5rem
+		}
+
+		.rounded-full {
+			border-radius: 9999px
+		}
+
+		.rounded-ch {
+			border-radius: 42%
+		}
+
+		.border {
+			border-width: 1px
+		}
+
+		.border-b {
+			border-bottom-width: 1px
+		}
+
+		.cursor-pointer {
+			cursor: pointer
+		}
+
+		.block {
+			display: block
+		}
+
+		.flex {
+			display: flex
+		}
+
+		.inline-flex {
+			display: inline-flex
+		}
+
+		.hidden {
+			display: none
+		}
+
+		.flex-col {
+			flex-direction: column
+		}
+
+		.flex-wrap {
+			flex-wrap: wrap
+		}
+
+		.items-start {
+			align-items: flex-start
+		}
+
+		.items-center {
+			align-items: center
+		}
+
+		.justify-start {
+			justify-content: flex-start
+		}
+
+		.justify-center {
+			justify-content: center
+		}
+
+		.justify-between {
+			justify-content: space-between
+		}
+
+		.font-body {
+			font-family: Nunito, sans-serif
+		}
+
+		.font-thin {
+			font-weight: 200
+		}
+
+		.font-light {
+			font-weight: 300
+		}
+
+		.font-semibold {
+			font-weight: 600
+		}
+
+		.font-bold {
+			font-weight: 700
+		}
+
+		.h-8 {
+			height: 2rem
+		}
+
+		.h-10 {
+			height: 2.5rem
+		}
+
+		.h-12 {
+			height: 3rem
+		}
+
+		.h-16 {
+			height: 4rem
+		}
+
+		.h-20 {
+			height: 5rem
+		}
+
+		.h-screen {
+			height: 100vh
+		}
+
+		.text-xs {
+			font-size: .75rem
+		}
+
+		.text-sm {
+			font-size: .875rem
+		}
+
+		.text-base {
+			font-size: 1.06rem
+		}
+
+		.text-lg {
+			font-size: 1.125rem
+		}
+
+		.text-xl {
+			font-size: 1.25rem
+		}
+
+		.text-2xl {
+			font-size: 1.5rem
+		}
+
+		.text-3xl {
+			font-size: 1.875rem
+		}
+
+		.text-md {
+			font-size: .925rem
+		}
+
+		.leading-tight {
+			line-height: 1.25
+		}
+
+		.leading-loose {
+			line-height: 2
+		}
+
+		.list-disc {
+			list-style-type: disc
+		}
+
+		.mx-1 {
+			margin-left: .25rem;
+			margin-right: .25rem
+		}
+
+		.my-2 {
+			margin-top: .5rem;
+			margin-bottom: .5rem
+		}
+
+		.my-3 {
+			margin-top: .75rem;
+			margin-bottom: .75rem
+		}
+
+		.my-5 {
+			margin-top: 1.25rem;
+			margin-bottom: 1.25rem
+		}
+
+		.mx-auto {
+			margin-left: auto;
+			margin-right: auto
+		}
+
+		.mt-1 {
+			margin-top: .25rem
+		}
+
+		.mb-1 {
+			margin-bottom: .25rem
+		}
+
+		.ml-1 {
+			margin-left: .25rem
+		}
+
+		.mt-2 {
+			margin-top: .5rem
+		}
+
+		.mb-2 {
+			margin-bottom: .5rem
+		}
+
+		.mb-3 {
+			margin-bottom: .75rem
+		}
+
+		.mt-4 {
+			margin-top: 1rem
+		}
+
+		.mt-5 {
+			margin-top: 1.25rem
+		}
+
+		.mb-5 {
+			margin-bottom: 1.25rem
+		}
+
+		.mt-6 {
+			margin-top: 1.5rem
+		}
+
+		.mb-6 {
+			margin-bottom: 1.5rem
+		}
+
+		.mt-8 {
+			margin-top: 2rem
+		}
+
+		.mb-8 {
+			margin-bottom: 2rem
+		}
+
+		.mt-10 {
+			margin-top: 2.5rem
+		}
+
+		.mb-10 {
+			margin-bottom: 2.5rem
+		}
+
+		.mt-12 {
+			margin-top: 3rem
+		}
+
+		.mt-16 {
+			margin-top: 4rem
+		}
+
+		.mb-16 {
+			margin-bottom: 4rem
+		}
+
+		.-mt-1 {
+			margin-top: -.25rem
+		}
+
+		.-mt-2 {
+			margin-top: -.5rem
+		}
+
+		.-mb-2 {
+			margin-bottom: -.5rem
+		}
+
+		.max-w-sm {
+			max-width: 24rem
+		}
+
+		.max-w-md {
+			max-width: 28rem
+		}
+
+		.max-w-2xl {
+			max-width: 42rem
+		}
+
+		.object-contain {
+			-o-object-fit: contain;
+			object-fit: contain
+		}
+
+		.focus\:outline-none:focus {
+			outline: 2px solid transparent;
+			outline-offset: 2px
+		}
+
+		.overflow-hidden {
+			overflow: hidden
+		}
+
+		.p-2 {
+			padding: .5rem
+		}
+
+		.p-3 {
+			padding: .75rem
+		}
+
+		.px-1 {
+			padding-left: .25rem;
+			padding-right: .25rem
+		}
+
+		.py-2 {
+			padding-top: .5rem;
+			padding-bottom: .5rem
+		}
+
+		.px-2 {
+			padding-left: .5rem;
+			padding-right: .5rem
+		}
+
+		.py-3 {
+			padding-top: .75rem;
+			padding-bottom: .75rem
+		}
+
+		.px-3 {
+			padding-left: .75rem;
+			padding-right: .75rem
+		}
+
+		.px-4 {
+			padding-left: 1rem;
+			padding-right: 1rem
+		}
+
+		.py-5 {
+			padding-top: 1.25rem;
+			padding-bottom: 1.25rem
+		}
+
+		.px-5 {
+			padding-left: 1.25rem;
+			padding-right: 1.25rem
+		}
+
+		.px-6 {
+			padding-left: 1.5rem;
+			padding-right: 1.5rem
+		}
+
+		.px-8 {
+			padding-left: 2rem;
+			padding-right: 2rem
+		}
+
+		.px-10 {
+			padding-left: 2.5rem;
+			padding-right: 2.5rem
+		}
+
+		.px-12 {
+			padding-left: 3rem;
+			padding-right: 3rem
+		}
+
+		.pr-1 {
+			padding-right: .25rem
+		}
+
+		.pr-2 {
+			padding-right: .5rem
+		}
+
+		.pt-4 {
+			padding-top: 1rem
+		}
+
+		.pt-8 {
+			padding-top: 2rem
+		}
+
+		.pl-8 {
+			padding-left: 2rem
+		}
+
+		.pt-10 {
+			padding-top: 2.5rem
+		}
+
+		.pb-10 {
+			padding-bottom: 2.5rem
+		}
+
+		.pb-20 {
+			padding-bottom: 5rem
+		}
+
+		.static {
+			position: static
+		}
+
+		.hover\:shadow-lg:hover {
+			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05)
+		}
+
+		.text-left {
+			text-align: left
+		}
+
+		.text-center {
+			text-align: center
+		}
+
+		.text-black {
+			--text-opacity: 1;
+			color: #000;
+			color: rgba(0, 0, 0, var(--text-opacity))
+		}
+
+		.text-white {
+			--text-opacity: 1;
+			color: #fff;
+			color: rgba(255, 255, 255, var(--text-opacity))
+		}
+
+		.text-gray-400 {
+			--text-opacity: 1;
+			color: #d5d5d5;
+			color: rgba(213, 213, 213, var(--text-opacity))
+		}
+
+		.text-gray-500 {
+			--text-opacity: 1;
+			color: #bdbdbd;
+			color: rgba(189, 189, 189, var(--text-opacity))
+		}
+
+		.text-gray-600 {
+			--text-opacity: 1;
+			color: grey;
+			color: rgba(128, 128, 128, var(--text-opacity))
+		}
+
+		.text-gray-700 {
+			--text-opacity: 1;
+			color: #4f4f4f;
+			color: rgba(79, 79, 79, var(--text-opacity))
+		}
+
+		.text-gray-800 {
+			--text-opacity: 1;
+			color: #333;
+			color: rgba(51, 51, 51, var(--text-opacity))
+		}
+
+		.text-gray-900 {
+			--text-opacity: 1;
+			color: #373530;
+			color: rgba(55, 53, 48, var(--text-opacity))
+		}
+
+		.text-red-500 {
+			--text-opacity: 1;
+			color: #e24c51;
+			color: rgba(226, 76, 81, var(--text-opacity))
+		}
+
+		.text-green-500 {
+			--text-opacity: 1;
+			color: #27ae60;
+			color: rgba(39, 174, 96, var(--text-opacity))
+		}
+
+		.text-blue-500 {
+			--text-opacity: 1;
+			color: #2f80ed;
+			color: rgba(47, 128, 237, var(--text-opacity))
+		}
+
+		.italic {
+			font-style: italic
+		}
+
+		.uppercase {
+			text-transform: uppercase
+		}
+
+		.tracking-wide {
+			letter-spacing: .025em
+		}
+
+		.tracking-widest {
+			letter-spacing: .1em
+		}
+
+		.truncate {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap
+		}
+
+		.w-8 {
+			width: 2rem
+		}
+
+		.w-10 {
+			width: 2.5rem
+		}
+
+		.w-12 {
+			width: 3rem
+		}
+
+		.w-16 {
+			width: 4rem
+		}
+
+		.w-20 {
+			width: 5rem
+		}
+
+		.w-full {
+			width: 100%
+		}
+
+		@-webkit-keyframes spin {
+			to {
+				transform: rotate(1turn)
+			}
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(1turn)
+			}
+		}
+
+		@-webkit-keyframes ping {
+			to {
+				transform: scale(2);
+				opacity: 0
+			}
+		}
+
+		@keyframes ping {
+
+			75%,
+			to {
+				transform: scale(2);
+				opacity: 0
+			}
+		}
+
+		@keyframes pulse {
+			50% {
+				opacity: .5
+			}
+		}
+
+		@-webkit-keyframes bounce {
+			to {
+				transform: translateY(-25%);
+				-webkit-animation-timing-function: cubic-bezier(.8, 0, 1, 1);
+				animation-timing-function: cubic-bezier(.8, 0, 1, 1)
+			}
+		}
+
+		@keyframes bounce {
+
+			0%,
+			to {
+				transform: translateY(-25%);
+				-webkit-animation-timing-function: cubic-bezier(.8, 0, 1, 1);
+				animation-timing-function: cubic-bezier(.8, 0, 1, 1)
+			}
+
+			50% {
+				transform: none;
+				-webkit-animation-timing-function: cubic-bezier(0, 0, .2, 1);
+				animation-timing-function: cubic-bezier(0, 0, .2, 1)
+			}
+		}
+
+		@media (min-width: 640px) {
+			.sm\:text-sm {
+				font-size: .875rem
+			}
+
+			.sm\:px-10 {
+				padding-left: 2.5rem;
+				padding-right: 2.5rem
+			}
+		}
+
+		@media (min-width: 768px) {
+			.md\:mt-20 {
+				margin-top: 5rem
+			}
+		}
+
+		.wave {
+			animation-name: wave-animation;
+			animation-duration: 3s;
+			animation-iteration-count: 1;
+			transform-origin: 70% 70%;
+			display: inline-block;
+		}
+
+		@keyframes wave-animation {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			5% {
+				transform: rotate(-5deg);
+			}
+
+			10% {
+				transform: rotate(10deg);
+			}
+
+			20% {
+				transform: rotate(-10deg);
+			}
+
+			30% {
+				transform: rotate(12deg);
+			}
+
+			40% {
+				transform: rotate(-10deg);
+			}
+
+			50% {
+				transform: rotate(12deg);
+			}
+
+			60% {
+				transform: rotate(-10deg);
+			}
+
+			70% {
+				transform: rotate(12deg);
+			}
+
+			80% {
+				transform: rotate(-10deg);
+			}
+
+			90% {
+				transform: rotate(9deg);
+			}
+
+			100% {
+				transform: rotate(0deg);
+			}
+		}
+
+		/* cyrillic-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 300;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSUbOvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+		}
+
+		/* cyrillic */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 300;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSUZevIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+
+		/* vietnamese */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 300;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSUbuvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+		}
+
+		/* latin-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 300;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSUb-vIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+		}
+
+		/* latin */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 300;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAnsSUYevIWzgPDA.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+
+		/* cyrillic-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofIOOaBTMnFcQIG.woff2) format('woff2');
+			unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+		}
+
+		/* cyrillic */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofIMeaBTMnFcQIG.woff2) format('woff2');
+			unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+
+		/* vietnamese */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofIOuaBTMnFcQIG.woff2) format('woff2');
+			unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+		}
+
+		/* latin-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofIO-aBTMnFcQIG.woff2) format('woff2');
+			unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+		}
+
+		/* latin */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXV3I6Li01BKofINeaBTMnFcQ.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+
+		/* cyrillic-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofA6sKUbOvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+		}
+
+		/* cyrillic */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofA6sKUZevIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+
+		/* vietnamese */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofA6sKUbuvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+		}
+
+		/* latin-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofA6sKUb-vIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+		}
+
+		/* latin */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofA6sKUYevIWzgPDA.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+
+		/* cyrillic-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOUbOvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+		}
+
+		/* cyrillic */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOUZevIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+
+		/* vietnamese */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOUbuvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+		}
+
+		/* latin-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOUb-vIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+		}
+
+		/* latin */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAjsOUYevIWzgPDA.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+
+		/* cyrillic-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 900;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAtsGUbOvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+		}
+
+		/* cyrillic */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 900;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAtsGUZevIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+
+		/* vietnamese */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 900;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAtsGUbuvIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+		}
+
+		/* latin-ext */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 900;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAtsGUb-vIWzgPDEtj.woff2) format('woff2');
+			unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+		}
+
+		/* latin */
+		@font-face {
+			font-family: 'Nunito';
+			font-style: normal;
+			font-weight: 900;
+			font-display: swap;
+			src: url(https://fonts.gstatic.com/s/nunito/v16/XRXW3I6Li01BKofAtsGUYevIWzgPDA.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+	</style>
+	<meta name="title" content="Scrubhouse: Drop-in audio chat for scrubs">
+	<meta name="description"
+		content="Scrubhouse is a new type of social network based on voice—where unpopular people around the world come together to talk, listen and learn from each other in real-time.">
+
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Scrubhouse: Drop-in audio chat for scrubs">
+	<meta property="og:url" content="https://www.joinscrubhouse.com/">
+	<meta property="og:description"
+		content="Scrubhouse is a new type of social network based on voice—where unpopular people around the world come together to talk, listen and learn from each other in real-time.">
+	<meta property="og:image" content="https://www.joinscrubhouse.com/static/full.png">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Scrubhouse: Drop-in audio chat for scrubs">
+	<meta name="twitter:description"
+		content="Scrubhouse is a new type of social network based on voice—where unpopular people around the world come together to talk, listen and learn from each other in real-time.">
+	<meta property="twitter:url" content="https://www.joinscrubhouse.com/">
+	<meta name="twitter:image" content="https://www.joinscrubhouse.com/static/summary.png">
 </head>
 
-<body>
-	<div class="container">
-		<h1>Scrubhouse</h1>
-		{% block containercontent %}{% endblock %}
+<body class="font-body bg-white">
+	<div class="flex flex-col items-center justify-center text-center mx-auto px-5 h-screen">
+		<div class="flex flex-col items-center justify-center text-center pb-20 text-gray-800 text-xl text-center">
+			<div class="flex items-center justify-center text-center font-bold">
+				<img class="wave object-contain h-10 w-10 pr-1" alt="wave" src="static/scrub.png">
+				Scrubhouse
+			</div>
+			{% block containercontent %}{% endblock %}
+		</div>
+		<div
+			class="flex flex-col items-center justify-center w-full py-5 px-8 mb-5 leading-loose font-thin text-center text-xs sm:text-sm text-gray-600">
+			<div class="flex items-center justify-center w-full">
+				<div class="flex">
+					<a href="/">Home</a>
+					<div class="px-1">・</div>
+				</div>
+				<div class="flex">
+					<a href="https://en.wikipedia.org/wiki/Steve_Jobs">Jobs</a>
+					<div class="px-1">・</div>
+				</div>
+				<div class="flex">
+					<a href="https://twitter.com/joinscrubhouse">Blog</a>
+					<div class="px-1">・</div>
+				</div>
+				<div class="flex">
+					<a href="mailto:hi@joinscrubhouse.com">Contact</a>
+					<div class="px-1">・</div>
+				</div>
+				<div class="flex">
+					<a href="https://www.urbandictionary.com/define.php?term=Rules%20of%20Fight%20Club">Guidelines</a>
+				</div>
+			</div>
+			<div class="flex items-center justify-center w-full">
+				<div class="flex">
+					<a href="https://brave.com">Privacy</a>
+					<div class="px-1">・</div>
+				</div>
+				<div class="flex">
+					<a href="https://a16z.com">Terms</a>
+				</div>
+			</div>
+		</div>
 	</div>
+
 </body>
 
 </html>

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}success{% endblock %}
 {% block containercontent %}
-<h2>{{ invite }}</h2>
-<h3>{{ members }}</h3>
+<div class="mt-8 text-gray-700 max-w-md">
+    You're in! <a href="{{ invite }}">Click here</a> to join the conversation.
+</div>
+<div class="mt-8 px-1 sm:px-14 text-gray-700 max-w-md text-sm">
+    This link self-destructs in 1 hour and is one-time use only so join ASAP to secure your spot.
+</div>
 {% endblock %}
