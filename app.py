@@ -6,7 +6,7 @@ import urllib.parse
 import urllib.error
 
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 import oauth2 as oauth
 import requests
 
@@ -106,6 +106,24 @@ def twitter():
             return render_template("error.html")
     else:
         return render_template("too-popular.html")
+
+
+@app.route("/room-request", methods=["POST"])
+def room():
+    if request.json["type"] == 1:
+        return jsonify({"type": 1})
+    else:
+        return jsonify(
+            {
+                "type": 4,
+                "data": {
+                    "tts": False,
+                    "content": "Your new voice channel has been added!",
+                    "embeds": [],
+                    "allowed_mentions": [],
+                },
+            }
+        )
 
 
 @app.errorhandler(500)
