@@ -103,7 +103,6 @@ def twitter():
         return render_template("error.html")
 
     response = json.loads(real_content.decode("utf-8"))
-    print(response)
     followers_count = response.get("followers_count", 0)
     created_at = response.get("created_at")
 
@@ -112,7 +111,7 @@ def twitter():
     if created_at:
         created_at_datetime = parser.parse(created_at)
         last_week_datetime = datetime.now() - timedelta(days=7)
-        if created_at > last_week_datetime:
+        if created_at_datetime > last_week_datetime:
             return render_template("too-soon.html")
         if followers_count < 1000:
             invite = get_discord_invite()
