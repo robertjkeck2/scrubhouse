@@ -128,7 +128,7 @@ def room():
     if request.json["type"] == 1:
         return jsonify({"type": 1})
     else:
-        name = request.json.get("data", {}).get("options", {}).get("value")
+        name = request.json.get("data", {}).get("options", [])[0].get("value")
         if name:
             added = add_voice_channel(name)
             if added:
