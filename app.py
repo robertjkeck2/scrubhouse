@@ -1,3 +1,4 @@
+from  datetime import datetime, timedelta
 import json
 import os
 from os.path import join, dirname
@@ -5,6 +6,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
+from dateutil import parser
 from dotenv import load_dotenv
 from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
 from nacl.signing import VerifyKey
@@ -102,16 +104,24 @@ def twitter():
 
     response = json.loads(real_content.decode("utf-8"))
     followers_count = response.get("followers_count", 0)
+    created_at = response.get("created_at")
+
     del oauth_store[oauth_token]
 
-    if followers_count < 1000:
-        invite = get_discord_invite()
-        if invite:
-            return render_template("welcome.html", invite=invite)
+    if created_at:
+        created_at_datetime = parser.parse(created_at)
+        last_week_datetime = datetime.now() - timedelta(days=7)
+        if created_at > last_week_datetime:
+            return render_template("too-soon.html")
+        if followers_count < 1000:
+            invite = get_discord_invite()
+            if invite:
+                return render_template("welcome.html", invite=invite)
+            else:
+                return render_template("error.html")
         else:
-            return render_template("error.html")
-    else:
-        return render_template("too-popular.html")
+            return render_template("too-popular.html")
+    return render_template("error.html")
 
 
 @app.route("/room-request", methods=["POST"])

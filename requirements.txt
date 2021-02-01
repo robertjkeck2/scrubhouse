@@ -2,5 +2,6 @@ Flask
 gunicorn
 oauth2
 pynacl
+python-dateutil
 python-dotenv
 requests
