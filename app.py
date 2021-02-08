@@ -170,16 +170,43 @@ def room():
         )
 
 
+@app.route("/refresh-rooms", methods=["POST"])
+def refresh_rooms():
+    num_success = 0
+    voice_channels = get_all_voice_channels()
+    for channel_id in voice_channels:
+        success = remove_voice_channel(channel_id)
+        if success:
+            num_success = num_success + 1
+    return jsonify({"success": num_success > 0, "num_removed": num_success})
+
+
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template("error.html"), 500
 
 
+def get_all_voice_channels():
+    get_all_channels_url = discord_base_url + "/guilds/{0}/channels".format(
+        app.config["DISCORD_GUILD_ID"]
+    )
+    response = _discord_api_request("GET", get_all_channels_url)
+    if response.status_code == 200:
+        channels = response.json()
+    else:
+        return []
+
+    voice_channels = []
+    for channel in channels:
+        if (
+            channel.get("type") == 2
+            and channel.get("id") != app.config["DISCORD_GENERAL_CHANNEL"]
+        ):
+            voice_channels.append(channel.get("id"))
+    return voice_channels
+
+
 def add_voice_channel(name):
-    headers = {
-        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
-        "Content-Type": "application/json",
-    }
     create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
         app.config["DISCORD_GUILD_ID"]
     )
@@ -188,27 +215,47 @@ def add_voice_channel(name):
         "type": 2,
         "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
     }
-    response = requests.post(create_channel_url, headers=headers, json=payload)
+    response = _discord_api_request("POST", create_channel_url, payload)
     if response.status_code == 201:
         return True
     return False
 
 
+def remove_voice_channel(channel_id):
+    remove_channel_url = discord_base_url + "/channels/{1}".format(
+        app.config["DISCORD_GUILD_ID"], channel_id
+    )
+    response = _discord_api_request("DELETE", remove_channel_url)
+    if response.status_code == 200:
+        return True
+    return False
+
+
 def get_discord_invite():
-    headers = {
-        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
-        "Content-Type": "application/json",
-    }
     channel_url = discord_base_url + "/channels/{0}/invites".format(
         app.config["DISCORD_GENERAL_CHANNEL"]
     )
     payload = {"max_age": 3600, "max_uses": 1, "unique": True}
-    response = requests.post(channel_url, headers=headers, json=payload)
+    response = _discord_api_request("POST", channel_url, payload)
     invite_url = None
     if response.status_code == 200:
         invite = response.json()
         invite_url = discord_invite_base_url + invite.get("code")
     return invite_url
+
+
+def _discord_api_request(request_type, url, payload=None):
+    headers = {
+        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
+        "Content-Type": "application/json",
+    }
+    if request_type == "GET":
+        response = requests.get(url, headers=headers)
+    elif request_type == "POST":
+        response = requests.post(url, headers=headers, json=payload)
+    elif request_type == "DELETE":
+        response = requests.delete(url, headers=headers)
+    return response
 
 
 if __name__ == "__main__":
