@@ -116,7 +116,7 @@ def twitter():
         if created_at_datetime > last_week_datetime:
             return render_template("too-soon.html")
         if followers_count < 1000:
-            invite = get_discord_invite()
+            invite = _get_discord_invite()
             if invite:
                 return render_template("welcome.html", invite=invite)
             else:
@@ -145,13 +145,25 @@ def room():
         name = request.json.get("data", {}).get("options", [])[0].get("value")
         if name:
             added = add_voice_channel(name)
-            if added:
+            if added[0]:
                 return jsonify(
                     {
                         "type": 4,
                         "data": {
                             "tts": False,
                             "content": "Your new voice channel has been added!",
+                            "embeds": [],
+                            "allowed_mentions": [],
+                        },
+                    }
+                )
+            if added[1] == "dupe":
+                return jsonify(
+                    {
+                        "type": 4,
+                        "data": {
+                            "tts": False,
+                            "content": "This room already exists. Please try a different room name.",
                             "embeds": [],
                             "allowed_mentions": [],
                         },
@@ -173,9 +185,9 @@ def room():
 @app.route("/refresh-rooms", methods=["POST"])
 def refresh_rooms():
     num_success = 0
-    voice_channels = get_all_voice_channels()
-    for channel_id in voice_channels:
-        success = remove_voice_channel(channel_id)
+    voice_channels = _get_all_voice_channels()
+    for channel in voice_channels:
+        success = remove_voice_channel(channel.get("id"))
         if success:
             num_success = num_success + 1
     return jsonify({"success": num_success > 0, "num_removed": num_success})
@@ -186,7 +198,35 @@ def internal_server_error(e):
     return render_template("error.html"), 500
 
 
-def get_all_voice_channels():
+def add_voice_channel(name):
+    room_exists = _check_for_duplicate_room(name)
+    if room_exists:
+        return (False, "dupe")
+    create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
+        app.config["DISCORD_GUILD_ID"]
+    )
+    payload = {
+        "name": name,
+        "type": 2,
+        "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
+    }
+    response = _discord_api_request("POST", create_channel_url, payload)
+    if response.status_code == 201:
+        return (True, "")
+    return (False, "error")
+
+
+def remove_voice_channel(channel_id):
+    remove_channel_url = discord_base_url + "/channels/{1}".format(
+        app.config["DISCORD_GUILD_ID"], channel_id
+    )
+    response = _discord_api_request("DELETE", remove_channel_url)
+    if response.status_code == 200:
+        return True
+    return False
+
+
+def _get_all_voice_channels():
     get_all_channels_url = discord_base_url + "/guilds/{0}/channels".format(
         app.config["DISCORD_GUILD_ID"]
     )
@@ -202,36 +242,19 @@ def get_all_voice_channels():
             channel.get("type") == 2
             and channel.get("id") != app.config["DISCORD_GENERAL_CHANNEL"]
         ):
-            voice_channels.append(channel.get("id"))
+            voice_channels.append(channel)
     return voice_channels
 
 
-def add_voice_channel(name):
-    create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
-        app.config["DISCORD_GUILD_ID"]
-    )
-    payload = {
-        "name": name,
-        "type": 2,
-        "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
-    }
-    response = _discord_api_request("POST", create_channel_url, payload)
-    if response.status_code == 201:
-        return True
+def _check_for_duplicate_room(name):
+    voice_channels = _get_all_voice_channels()
+    for channel in voice_channels:
+        if name == channel.get("name"):
+            return True
     return False
 
 
-def remove_voice_channel(channel_id):
-    remove_channel_url = discord_base_url + "/channels/{1}".format(
-        app.config["DISCORD_GUILD_ID"], channel_id
-    )
-    response = _discord_api_request("DELETE", remove_channel_url)
-    if response.status_code == 200:
-        return True
-    return False
-
-
-def get_discord_invite():
+def _get_discord_invite():
     channel_url = discord_base_url + "/channels/{0}/invites".format(
         app.config["DISCORD_GENERAL_CHANNEL"]
     )
