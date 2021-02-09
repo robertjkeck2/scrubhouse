@@ -29,6 +29,7 @@ access_token_url = "https://api.twitter.com/oauth/access_token"
 authorize_url = "https://api.twitter.com/oauth/authorize"
 show_user_url = "https://api.twitter.com/1.1/users/show.json"
 
+app.config["API_AUTH_TOKEN"] = os.getenv("API_AUTH_TOKEN")
 app.config["TWITTER_API_KEY"] = os.getenv("TWITTER_API_KEY")
 app.config["TWITTER_API_SECRET"] = os.getenv("TWITTER_API_SECRET")
 app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
@@ -116,7 +117,7 @@ def twitter():
         if created_at_datetime > last_week_datetime:
             return render_template("too-soon.html")
         if followers_count < 1000:
-            invite = get_discord_invite()
+            invite = _get_discord_invite()
             if invite:
                 return render_template("welcome.html", invite=invite)
             else:
@@ -145,13 +146,25 @@ def room():
         name = request.json.get("data", {}).get("options", [])[0].get("value")
         if name:
             added = add_voice_channel(name)
-            if added:
+            if added[0]:
                 return jsonify(
                     {
                         "type": 4,
                         "data": {
                             "tts": False,
                             "content": "Your new voice channel has been added!",
+                            "embeds": [],
+                            "allowed_mentions": [],
+                        },
+                    }
+                )
+            if added[1] == "dupe":
+                return jsonify(
+                    {
+                        "type": 4,
+                        "data": {
+                            "tts": False,
+                            "content": "This room already exists. Please try a different room name.",
                             "embeds": [],
                             "allowed_mentions": [],
                         },
@@ -170,16 +183,35 @@ def room():
         )
 
 
+@app.route("/refresh-rooms", methods=["POST"])
+def refresh_rooms():
+    auth_headers = request.headers.get("Authorization")
+    if auth_headers != "Bearer " + app.config["API_AUTH_TOKEN"]:
+        abort(401, "invalid authorization")
+
+    num_success = 0
+    voice_channels = _get_all_voice_channels()
+    for channel in voice_channels:
+        success = remove_voice_channel(channel.get("id"))
+        if success:
+            num_success = num_success + 1
+    return jsonify(
+        {
+            "success": len(voice_channels) == 0 or num_success > 0,
+            "num_removed": num_success,
+        }
+    )
+
+
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template("error.html"), 500
 
 
 def add_voice_channel(name):
-    headers = {
-        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
-        "Content-Type": "application/json",
-    }
+    room_exists = _check_for_duplicate_room(name)
+    if room_exists:
+        return (False, "dupe")
     create_channel_url = discord_base_url + "/guilds/{0}/channels".format(
         app.config["DISCORD_GUILD_ID"]
     )
@@ -188,27 +220,75 @@ def add_voice_channel(name):
         "type": 2,
         "parent_id": app.config["DISCORD_VOICE_PARENT_ID"],
     }
-    response = requests.post(create_channel_url, headers=headers, json=payload)
+    response = _discord_api_request("POST", create_channel_url, payload)
     if response.status_code == 201:
+        return (True, "")
+    return (False, "error")
+
+
+def remove_voice_channel(channel_id):
+    remove_channel_url = discord_base_url + "/channels/{1}".format(
+        app.config["DISCORD_GUILD_ID"], channel_id
+    )
+    response = _discord_api_request("DELETE", remove_channel_url)
+    if response.status_code == 200:
         return True
     return False
 
 
-def get_discord_invite():
-    headers = {
-        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
-        "Content-Type": "application/json",
-    }
+def _get_all_voice_channels():
+    get_all_channels_url = discord_base_url + "/guilds/{0}/channels".format(
+        app.config["DISCORD_GUILD_ID"]
+    )
+    response = _discord_api_request("GET", get_all_channels_url)
+    if response.status_code == 200:
+        channels = response.json()
+    else:
+        return []
+
+    voice_channels = []
+    for channel in channels:
+        if (
+            channel.get("type") == 2
+            and channel.get("id") != app.config["DISCORD_GENERAL_CHANNEL"]
+        ):
+            voice_channels.append(channel)
+    return voice_channels
+
+
+def _check_for_duplicate_room(name):
+    voice_channels = _get_all_voice_channels()
+    for channel in voice_channels:
+        if name == channel.get("name"):
+            return True
+    return False
+
+
+def _get_discord_invite():
     channel_url = discord_base_url + "/channels/{0}/invites".format(
         app.config["DISCORD_GENERAL_CHANNEL"]
     )
     payload = {"max_age": 3600, "max_uses": 1, "unique": True}
-    response = requests.post(channel_url, headers=headers, json=payload)
+    response = _discord_api_request("POST", channel_url, payload)
     invite_url = None
     if response.status_code == 200:
         invite = response.json()
         invite_url = discord_invite_base_url + invite.get("code")
     return invite_url
+
+
+def _discord_api_request(request_type, url, payload=None):
+    headers = {
+        "Authorization": "Bot {}".format(app.config["DISCORD_BOT_TOKEN"]),
+        "Content-Type": "application/json",
+    }
+    if request_type == "GET":
+        response = requests.get(url, headers=headers)
+    elif request_type == "POST":
+        response = requests.post(url, headers=headers, json=payload)
+    elif request_type == "DELETE":
+        response = requests.delete(url, headers=headers)
+    return response
 
 
 if __name__ == "__main__":
