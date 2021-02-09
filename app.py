@@ -29,6 +29,7 @@ access_token_url = "https://api.twitter.com/oauth/access_token"
 authorize_url = "https://api.twitter.com/oauth/authorize"
 show_user_url = "https://api.twitter.com/1.1/users/show.json"
 
+app.config["API_AUTH_TOKEN"] = os.getenv("API_AUTH_TOKEN")
 app.config["TWITTER_API_KEY"] = os.getenv("TWITTER_API_KEY")
 app.config["TWITTER_API_SECRET"] = os.getenv("TWITTER_API_SECRET")
 app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
@@ -184,13 +185,22 @@ def room():
 
 @app.route("/refresh-rooms", methods=["POST"])
 def refresh_rooms():
+    auth_headers = request.headers.get("Authorization")
+    if auth_headers != "Bearer " + app.config["API_AUTH_TOKEN"]:
+        abort(401, "invalid authorization")
+
     num_success = 0
     voice_channels = _get_all_voice_channels()
     for channel in voice_channels:
         success = remove_voice_channel(channel.get("id"))
         if success:
             num_success = num_success + 1
-    return jsonify({"success": num_success > 0, "num_removed": num_success})
+    return jsonify(
+        {
+            "success": len(voice_channels) == 0 or num_success > 0,
+            "num_removed": num_success,
+        }
+    )
 
 
 @app.errorhandler(500)
