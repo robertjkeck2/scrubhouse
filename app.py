@@ -75,12 +75,15 @@ def twitter():
     if oauth_denied:
         if oauth_denied in oauth_store:
             del oauth_store[oauth_denied]
+        print("oauth denied")
         return render_template("error.html")
 
     if not oauth_token or not oauth_verifier:
+        print("oauth token not found")
         return render_template("error.html")
 
     if oauth_token not in oauth_store:
+        print("oauth token not in store")
         return render_template("error.html")
 
     oauth_token_secret = oauth_store[oauth_token]
@@ -102,6 +105,7 @@ def twitter():
     )
 
     if real_resp["status"] != "200":
+        print(real_resp.text)
         return render_template("error.html")
 
     response = json.loads(real_content.decode("utf-8"))
@@ -124,6 +128,7 @@ def twitter():
                 return render_template("error.html")
         else:
             return render_template("too-popular.html")
+    print("no created at")
     return render_template("error.html")
 
 
