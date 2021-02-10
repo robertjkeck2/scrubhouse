@@ -8,7 +8,16 @@ import urllib.error
 
 from dateutil import parser
 from dotenv import load_dotenv
-from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
+from flask import (
+    Flask,
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 import oauth2 as oauth
@@ -37,9 +46,7 @@ app.config["DISCORD_GENERAL_CHANNEL"] = os.getenv("DISCORD_GENERAL_CHANNEL")
 app.config["DISCORD_GUILD_ID"] = os.getenv("DISCORD_GUILD_ID")
 app.config["DISCORD_PUBLIC_KEY"] = os.getenv("DISCORD_PUBLIC_KEY")
 app.config["DISCORD_VOICE_PARENT_ID"] = os.getenv("DISCORD_VOICE_PARENT_ID")
-
-
-oauth_store = {}
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 
 @app.route("/")
@@ -62,7 +69,7 @@ def start():
     oauth_token = request_token[b"oauth_token"].decode("utf-8")
     oauth_token_secret = request_token[b"oauth_token_secret"].decode("utf-8")
 
-    oauth_store[oauth_token] = oauth_token_secret
+    session[oauth_token] = oauth_token_secret
     return redirect("{0}?oauth_token={1}".format(authorize_url, oauth_token))
 
 
@@ -73,20 +80,17 @@ def twitter():
     oauth_denied = request.args.get("denied")
 
     if oauth_denied:
-        if oauth_denied in oauth_store:
-            del oauth_store[oauth_denied]
-        print("oauth denied")
+        if oauth_denied in session:
+            session.pop(oauth_denied, None)
         return render_template("error.html")
 
     if not oauth_token or not oauth_verifier:
-        print("oauth token not found")
         return render_template("error.html")
 
-    if oauth_token not in oauth_store:
-        print("oauth token not in store")
+    if oauth_token not in session:
         return render_template("error.html")
 
-    oauth_token_secret = oauth_store[oauth_token]
+    oauth_token_secret = session.get(oauth_token)
     consumer = oauth.Consumer(
         app.config["TWITTER_API_KEY"], app.config["TWITTER_API_SECRET"]
     )
@@ -105,14 +109,13 @@ def twitter():
     )
 
     if real_resp["status"] != "200":
-        print(real_resp.text)
         return render_template("error.html")
 
     response = json.loads(real_content.decode("utf-8"))
     followers_count = response.get("followers_count", 0)
     created_at = response.get("created_at")
 
-    del oauth_store[oauth_token]
+    session.pop(oauth_token, None)
 
     if created_at:
         created_at_datetime = parser.parse(created_at)
@@ -128,7 +131,6 @@ def twitter():
                 return render_template("error.html")
         else:
             return render_template("too-popular.html")
-    print("no created at")
     return render_template("error.html")
 
 
